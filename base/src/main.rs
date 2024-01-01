@@ -12,7 +12,7 @@ fn main() {
     io::stdin().read_line(&mut input).expect("Failed to read line");
     let input = input.trim();
 
-    let symbol: Result<Symbol<unsafe extern "C" fn(i32) -> u32>, _> = unsafe { lib.symbol(input) };
+    let symbol: Result<Symbol<unsafe extern "C" fn() >, _> = unsafe { lib.symbol(input) };
     let func = match symbol {
         Ok(symbol) => {
             let func = symbol;
@@ -22,9 +22,7 @@ fn main() {
     };
 
     match func {
-        Ok(Some(func)) => {
-            unsafe { func(5) };
-        }
+        Ok(Some(func)) => unsafe { func() },
         Ok(None) => println!("Function pointer is null"),
         Err(_) => println!("No such function: {}", input),
     }
